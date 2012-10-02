@@ -6,6 +6,8 @@ set(
   SOURCES
   src/main.cpp
   src/problem.cpp
+  src/constraint.cpp
+  src/variable.cpp
   )
 
 include_directories(${CMAKE_SOURCE_DIR}/include/)
