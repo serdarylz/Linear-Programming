@@ -2,8 +2,10 @@
 #define _PROBLEM_H_
 
 #include <string>
+#include <vector>
 
-#include "glpk.h"
+#include "constraint.hpp"
+#include "variable.hpp"
 
 
 enum Optimization
@@ -20,11 +22,13 @@ public:
 
     void setOptimization(const Optimization& flag);
 
-    void addConstraints(unsigned n);
-    void addVariables(unsigned n);
+    void addConstraints(const Constraint& c);
+    void addVariables(const Variable& v);
 
 private:
     glp_prob* pb_;
+    std::vector<Constraint> constraints_;
+    std::vector<Variable> variables_;
 };
 
 

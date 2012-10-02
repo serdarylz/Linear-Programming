@@ -20,3 +20,15 @@ Problem::setOptimization(const Optimization& flag)
     else if (flag == MINIMIZE)
         glp_set_obj_dir(pb_, GLP_MIN);
 }
+
+void
+Problem::addConstraints(const Constraint& c)
+{
+    constraints_.push_back(c);
+}
+
+void
+Problem::addVariables(const Variable& v)
+{
+    variables_.push_back(v);
+}
