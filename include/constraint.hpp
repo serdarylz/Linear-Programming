@@ -9,11 +9,12 @@ class Constraint
 public:
     Constraint(glp_prob *lp);
     ~Constraint() = default;
+    void set_name(const std::string& name);
+    void set_bounds(int type, double lb, double ub);
 
 private:
-    static int  i_;
-    std::string name_;
     glp_prob    *lp_;
+    static int  i_;
 };
 
 #endif /* _CONSTRAINT_H_ */
