@@ -1,5 +1,10 @@
 #include "constraint.hpp"
 
-Constraint::Constraint(const std::string& name)
-    : name_(name)
-{}
+int Constraint::i_ = 0;
+
+Constraint::Constraint(glp_prob *lp)
+    : lp_(lp)
+{
+    i_++;
+}
+

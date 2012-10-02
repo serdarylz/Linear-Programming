@@ -7,11 +7,13 @@
 class Constraint
 {
 public:
-    Constraint(const std::string& name);
+    Constraint(glp_prob *lp);
     ~Constraint() = default;
 
 private:
-    std::string name_;
+    static int  i_;
+    //std::string name_;
+    glp_prob    *lp_;
 };
 
 #endif /* _CONSTRAINT_H_ */

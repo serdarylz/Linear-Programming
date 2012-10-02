@@ -12,6 +12,7 @@ public:
 
 private:
     std::string name_;
+    glp_prob    *lp_;
 };
 
 #endif /* _VARIABLE_H_ */
