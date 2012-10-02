@@ -7,10 +7,11 @@
 class Variable
 {
 public:
-    Variable(const std::string& name);
+    Variable(glp_prob *lp);
     ~Variable() = default;
 
 private:
+    static int  i_;
     std::string name_;
     glp_prob    *lp_;
 };

@@ -1,5 +1,9 @@
 #include "variable.hpp"
 
-Variable::Variable(const std::string& name)
-    : name_(name)
-{}
+int Variable::i_ = 0;
+
+Variable::Variable(glp_prob *lp)
+    : lp_(lp)
+{
+    i_++;
+}

@@ -12,7 +12,7 @@ public:
 
 private:
     static int  i_;
-    //std::string name_;
+    std::string name_;
     glp_prob    *lp_;
 };
 
