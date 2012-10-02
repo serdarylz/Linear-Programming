@@ -1,9 +1,12 @@
 #include <glpk.h>
 #include <stdio.h>
 
+#include "problem.hpp"
+
 
 int main()
 {
+    Problem pb("pb");
     glp_prob* lp;
 
     lp = glp_create_prob();

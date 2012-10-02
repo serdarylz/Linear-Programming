@@ -3,6 +3,14 @@
 
 #include <string>
 
+#include "glpk.h"
+
+
+enum Optimization
+{
+    MAXIMIZE,
+    MINIMIZE
+};
 
 class Problem
 {
@@ -10,8 +18,13 @@ public:
     Problem(const std::string& name);
     ~Problem();
 
+    void setOptimization(const Optimization& flag);
+
+    void addConstraints(unsigned n);
+    void addVariables(unsigned n);
+
 private:
-    std::string name_;
+    glp_prob* pb_;
 };
 
 
