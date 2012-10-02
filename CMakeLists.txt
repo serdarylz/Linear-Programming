@@ -5,9 +5,11 @@ project (lp)
 set(
   SOURCES
   src/main.cpp
+  src/constraint.cpp
+  src/variable.cpp
   )
 
-# include_directories(${CMAKE_SOURCE_DIR}/include/)
+include_directories(${CMAKE_SOURCE_DIR}/include/)
 link_directories(${CMAKE_SOURCE_DIR}/lib/)
 
 set(CMAKE_CXX_COMPILER "g++")
