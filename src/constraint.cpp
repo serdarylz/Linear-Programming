@@ -1,17 +1,28 @@
 #include "constraint.hpp"
 
-int Constraint::i_ = 0;
+#include "problem.hpp"
 
-Constraint::Constraint(glp_prob *lp)
-    : lp_(lp)
+
+int Constraint::i_ = 1;
+
+Constraint::Constraint(const Problem& pb)
 {
-    i_++;
+    lp_ = pb.pb_;
+    lineNumber_ = i_++;
+
+    glp_add_rows(lp_, 1);
 }
 
 void Constraint::set_name(const std::string& name) {
-    glp_set_row_name(lp_, i_, name.c_str());
+    glp_set_row_name(lp_, lineNumber_, name.c_str());
 }
 
 void Constraint::set_bounds(int type, double lb, double ub) {
-    glp_set_row_bnds(lp_, i_, type, lb, ub);
+    glp_set_row_bnds(lp_, lineNumber_, type, lb, ub);
+}
+
+unsigned
+Constraint::getLineNumber() const
+{
+    return lineNumber_;
 }

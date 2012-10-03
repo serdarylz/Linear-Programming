@@ -8,27 +8,31 @@
 #include "variable.hpp"
 
 
-enum Optimization
-{
-    MAXIMIZE,
-    MINIMIZE
-};
-
 class Problem
 {
 public:
+    friend class Constraint;
+    friend class Variable;
+
+    enum Optimization
+    {
+        MAXIMIZE,
+        MINIMIZE
+    };
+
     Problem(const std::string& name);
     ~Problem();
 
     void setOptimization(const Optimization& flag);
+    void setConstraintsValues(const Constraint& c, const Variable& v, double value);
 
-    void addConstraints(const Constraint& c);
-    void addVariables(const Variable& v);
+    std::vector<double> solve();
 
 private:
     glp_prob* pb_;
-    std::vector<Constraint> constraints_;
-    std::vector<Variable> variables_;
+    std::vector<int> rows_;
+    std::vector<int> cols_;
+    std::vector<double> values_;
 };
 
 
