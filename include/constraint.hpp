@@ -20,7 +20,7 @@ public:
 private:
     glp_prob    *lp_;
     static int  i_;
-    unsigned lineNumber_;
+    unsigned    lineNumber_;
 };
 
 #endif /* _CONSTRAINT_H_ */

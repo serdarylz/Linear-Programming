@@ -22,11 +22,7 @@ public:
 private:
     glp_prob    *lp_;
     static int  j_;
-    std::string name_;
-    int         type_;
-    double      lb_;
-    double      ub_;
-    unsigned colNumber_;
+    unsigned    colNumber_;
 };
 
 #endif /* _VARIABLE_H_ */
