@@ -1,0 +1,115 @@
+\documentclass[11pt]{article}
+
+\usepackage{color}
+\usepackage{listings}
+\lstset{language=C++,
+        breakindent=40pt,
+        breaklines=true,
+        keywordstyle=\color{blue},
+        frame=single}
+\usepackage{mathtools}
+
+\title{\textbf{PLAM}}
+\author{Boulanger \'Edouard\\
+		Chanut J\'er\'emy}
+\date{}
+\begin{document}
+
+\maketitle
+
+\section{Mod\'elisation objet}
+Afin d'interfacer \textbf{GLPK} en C++, nous avons mod\'elis\'e les probl\`emes de PLNE avec trois classes: \emph{Variable}, \emph{Contrainte}, et \emph{Probl\`eme}.
+
+Ces classes encapsulent les fonctions de \textbf{GLPK} utiles aux probl\`emes de la PLNE.
+
+La classe \emph{Variable} g\`ere son nom, ses limites, ainsi que son coefficient dans la fonction objectif.
+
+La classe \emph{Contrainte} g\`ere son nom et ses limites.
+
+La classe \emph{Probl\`eme} encapsule la structure \verb|glp_prob| et les fonctions de \textbf{GLPK} g\'erant la r\'esolution d'un probl\`eme.
+
+La classe Variable:
+\begin{lstlisting}
+class Variable
+{   
+public:
+    Variable(const Problem& pb);
+    ~Variable() = default;
+    
+    void set_name(const std::string& name);
+    void set_bounds(int type, double lb, double ub);
+    void set_coef(double coef);
+    
+    unsigned getColNumber() const;
+    
+private:
+    glp_prob    *lp_;
+    static int  j_;
+    unsigned    colNumber_; 
+};
+\end{lstlisting}
+
+La classe Contrainte:
+\begin{lstlisting}
+class Constraint
+{
+public:
+    Constraint(const Problem& pb);
+    ~Constraint() = default;
+
+    void set_name(const std::string& name);
+    void set_bounds(int type, double lb, double ub);
+
+    unsigned getLineNumber() const;
+
+private:
+    glp_prob    *lp_;
+    static int  i_;
+    unsigned    lineNumber_;
+};
+\end{lstlisting}
+
+La classe Probl\`eme:
+\begin{lstlisting}
+class Problem
+{
+public:
+    friend class Constraint;
+    friend class Variable;
+
+    enum Optimization
+    {
+        MAXIMIZE,
+        MINIMIZE
+    };
+
+    Problem(const std::string& name);
+    ~Problem();
+
+    void setOptimization(const Optimization& flag);
+    void setConstraintsValues(const Constraint& c, const Variable& v, double value);
+
+    std::vector<double> solve();
+
+private:
+    glp_prob* pb_;
+    std::vector<int> rows_;
+    std::vector<int> cols_;
+    std::vector<double> values_;
+};
+\end{lstlisting}
+
+\section{Probl\`eme des entrep\^ots}
+Pour le probl\`eme des entrep\^ots, $c_i$ repr\'esente la capacit\'e du site $i$. $n$ est le nombre de sites, $m$ le nombre d'entrep\^ots \`a construire. \emph{oui} est repr\'esent\'e par $1$, \emph{non} par $0$.
+
+Nous avons comme variable un tableau de bool\'eens appel\'e $b$, de taille $n$. Pour chaque site $i$, $b_i$ indique si oui ou non il est s\'electionn\'e pour y construire un entrep\^ot.
+
+La fonction objectif \`a maximiser est donc: \[z=\sum_{i=1}^{n}b_i\times{}c_i\]
+
+Pour s\'electionner $m$ sites , il faut la contrainte suivante: \[\sum_{i=1}^{n}b_i=m\]
+
+La contrainte de distance, moins de 50 km entre deux entrep\^ots, est repr\'esent\'ee par un tableau de bool\'eens $d$ \`a deux dimensions, de taille $n\times{}n$. Chaque case $d_{i,j}$ indique si oui ou non les entrep\^ots $i$ et $j$ sont \`a moins de 50 km l'un de l'autre.
+
+Ainsi pour s\'electionner $m$ sites en respectant la contrainte de distance, on a: \[\sum_{\substack{i=1 \\ j=1}}^{n}b_i\times{}b_j\times{}d_{i,j}=m\]
+
+\end{document}
