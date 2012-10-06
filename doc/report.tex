@@ -30,13 +30,13 @@ Afin d'interfacer \textbf{GLPK} en C++, nous avons mod\'elis\'e les probl\`emes 
  & \textbf{Problem} \\
 \hline
 - & pb: glp\_prob \\
-- & rows: vector<int> \\
-- & cols: vector<int> \\
-- & values: vector<double> \\
+- & rows: vector\verb|<|int\verb|>| \\
+- & cols: vector\verb|<|int\verb|>| \\
+- & values: vector\verb|<|double\verb|>| \\
 \hline
 + & setOptimization(Optimization): void \\
 + & setConstraintsValues(Constraint, Variable, double): void \\
-+ & solve(): vector<double> \\
++ & solve(): vector\verb|<|double\verb|>| \\
 \hline
 \end{tabular}
 \end{center}
