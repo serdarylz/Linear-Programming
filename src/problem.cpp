@@ -46,6 +46,9 @@ Problem::setConstraintsValues(const Constraint& c, int col, double value)
 std::vector<int>
 Problem::solve()
 {
+    std::cout << "Rows : " << glp_get_num_rows(pb_) << std::endl;
+    std::cout << "Cols : " << glp_get_num_cols(pb_) << std::endl;
+
     std::vector<int> res;
     unsigned size = glp_get_num_cols(pb_) * glp_get_num_rows(pb_);
 
@@ -55,8 +58,13 @@ Problem::solve()
     std::cout << "z = " << glp_get_obj_val(pb_) << std::endl;
 
     for (int i = 1; i <= glp_get_num_cols(pb_); ++i) {
-        if (glp_get_col_prim(pb_, i) == 1)
+        std::cout << glp_get_col_prim(pb_, i) << std::endl;
+
+        if (glp_get_col_prim(pb_, i) == 1.0) {
+            std::cout << "TEST" << std::endl;
+
             res.push_back(i);
+        }
     }
 
     return res;

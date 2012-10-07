@@ -105,30 +105,26 @@ int main(int argc, char** argv)
         pb.setConstraintsValues(p, v, 1.0);
     }
 
-    std::vector<Constraint> constraints;
-
     // That doesn't quite work
     for (unsigned i = 0; i < nbSites; ++i) {
         for (unsigned j = 0; j < nbSites; ++j) {
             if (i < j) {
                 Constraint c(pb);
 
-                if (distances[i][j] == 0) {
+                if (distances[i][j] == 0)
                     c.set_bounds(GLP_UP, 0.0, 1.0);
-                }
-                else {
+                else
                     c.set_bounds(GLP_UP, 0.0, 2.0);
+
+                for (unsigned k = 1; k <= nbSites; ++k) {
+                    if (k == (i + 1) || k == (j + 1))
+                        pb.setConstraintsValues(c, k, 1.0);
+                    else
+                        pb.setConstraintsValues(c, k, 0.0);
                 }
-
-                pb.setConstraintsValues(c, i + 1, 1.0);
-                pb.setConstraintsValues(c, j + 1, 1.0);
-
-                constraints.push_back(c);
             }
         }
     }
-    std::cout << constraints.size() << std::endl;
-
 
     writeFile(pb.solve());
 
