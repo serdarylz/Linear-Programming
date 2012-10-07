@@ -25,14 +25,17 @@ public:
 
     void setOptimization(const Optimization& flag);
     void setConstraintsValues(const Constraint& c, const Variable& v, double value);
+    void setConstraintsValues(const Constraint& c, int col, double value);
 
-    std::vector<double> solve();
+    std::vector<int> solve();
 
 private:
     glp_prob* pb_;
     std::vector<int> rows_;
     std::vector<int> cols_;
     std::vector<double> values_;
+    std::vector<Variable> variables_;
+    std::vector<Constraint> constraints_;
 };
 
 

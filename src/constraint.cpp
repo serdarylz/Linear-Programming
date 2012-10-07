@@ -1,6 +1,7 @@
 #include "constraint.hpp"
 
 #include "problem.hpp"
+#include <iostream>
 
 
 int Constraint::i_ = 1;
