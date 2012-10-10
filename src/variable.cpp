@@ -1,6 +1,7 @@
 #include "variable.hpp"
 
 #include "problem.hpp"
+#include <iostream>
 
 
 int Variable::j_ = 1;
@@ -25,8 +26,17 @@ void Variable::set_coef(double coef) {
     glp_set_obj_coef(lp_, colNumber_, coef);
 }
 
-unsigned
-Variable::getColNumber() const
+unsigned Variable::getColNumber() const
 {
     return colNumber_;
+}
+
+void Variable::set_type(Type type)
+{
+    if (type == Variable::BINARY)
+        glp_set_col_kind(lp_, colNumber_, GLP_BV);
+    else if (type == INTEGER)
+        glp_set_col_kind(lp_, colNumber_, GLP_BV);
+    else if (type == CONTINUOUS)
+        glp_set_col_kind(lp_, colNumber_, GLP_BV);
 }

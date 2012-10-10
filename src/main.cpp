@@ -15,7 +15,7 @@ unsigned nbStores;
 std::vector<short> sites;
 std::vector<unsigned> capacities;
 std::vector<std::pair<int, int>> coordinates;
-boost::multi_array<short, 2> distances;
+boost::multi_array<short unsigned, 2> distances;
 
 void readFile(char* fileName)
 {
@@ -80,16 +80,13 @@ int main(int argc, char** argv)
     Problem pb("pb");
     pb.setOptimization(Problem::MAXIMIZE);
 
-    // Constraints
+    // Main constraint
     Constraint p(pb);
 
     p.set_name("p");
     p.set_bounds(GLP_FX, nbStores, nbStores);
 
     // Variables
-    std::vector<Variable> variables;
-
-    // That works
     for (unsigned i = 1; i <= nbSites; ++i) {
         Variable v(pb);
         std::stringstream ss;
@@ -98,29 +95,29 @@ int main(int argc, char** argv)
         std::string name = "B" + ss.str();
 
         v.set_name(name);
-        v.set_bounds(GLP_DB, 0.0, 1.0);
+        v.set_type(Variable::BINARY);
+        // v.set_bounds(GLP_DB, 0, 1);
         v.set_coef(capacities.at(i - 1));
 
-        variables.push_back(v);
-        pb.setConstraintsValues(p, v, 1.0);
+        pb.setConstraintsValues(p, v, 1);
     }
 
-    // That doesn't quite work
+    // Additional constraints for the distance
     for (unsigned i = 0; i < nbSites; ++i) {
         for (unsigned j = 0; j < nbSites; ++j) {
             if (i < j) {
                 Constraint c(pb);
 
                 if (distances[i][j] == 0)
-                    c.set_bounds(GLP_UP, 0.0, 1.0);
+                    c.set_bounds(GLP_UP, 0, 1);
                 else
-                    c.set_bounds(GLP_UP, 0.0, 2.0);
+                    c.set_bounds(GLP_UP, 0, 2);
 
                 for (unsigned k = 1; k <= nbSites; ++k) {
                     if (k == (i + 1) || k == (j + 1))
-                        pb.setConstraintsValues(c, k, 1.0);
+                        pb.setConstraintsValues(c, k, 1);
                     else
-                        pb.setConstraintsValues(c, k, 0.0);
+                        pb.setConstraintsValues(c, k, 0);
                 }
             }
         }

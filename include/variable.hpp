@@ -10,12 +10,20 @@ class Problem;
 class Variable
 {
 public:
+    enum Type
+    {
+        CONTINUOUS,
+        INTEGER,
+        BINARY
+    };
+
     Variable(const Problem& pb);
     ~Variable() = default;
 
     void set_name(const std::string& name);
     void set_bounds(int type, double lb, double ub);
     void set_coef(double coef);
+    void set_type(Type type);
 
     unsigned getColNumber() const;
 

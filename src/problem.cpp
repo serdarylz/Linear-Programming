@@ -55,16 +55,19 @@ Problem::solve()
     glp_load_matrix(pb_, size, rows_.data(), cols_.data(), values_.data());
     glp_simplex(pb_, nullptr);
 
+    // glp_iocp* param = new glp_iocp;
+    // param->gmi_cuts = GLP_ON;
+    // param->mir_cuts = GLP_ON;
+    // glp_init_iocp(param);
+    // glp_intopt(pb_, param);
+
     std::cout << "z = " << glp_get_obj_val(pb_) << std::endl;
 
     for (int i = 1; i <= glp_get_num_cols(pb_); ++i) {
-        std::cout << glp_get_col_prim(pb_, i) << std::endl;
+        std::cout << glp_get_col_name(pb_, i) << " : " << glp_get_col_prim(pb_, i) << std::endl;
 
-        if (glp_get_col_prim(pb_, i) == 1.0) {
-            std::cout << "TEST" << std::endl;
-
+        if (glp_get_col_prim(pb_, i) == 1)
             res.push_back(i);
-        }
     }
 
     return res;
