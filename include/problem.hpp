@@ -20,7 +20,7 @@ public:
         MINIMIZE
     };
 
-    Problem(const std::string& name);
+    Problem(const std::string& name, bool isMIP = false);
     ~Problem();
 
     void setOptimization(const Optimization& flag);
@@ -34,8 +34,7 @@ private:
     std::vector<int> rows_;
     std::vector<int> cols_;
     std::vector<double> values_;
-    std::vector<Variable> variables_;
-    std::vector<Constraint> constraints_;
+    bool isMIP_; // Is the problem a Mixed Integer linear Problem ?
 };
 
 

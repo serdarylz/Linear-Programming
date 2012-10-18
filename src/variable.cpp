@@ -36,7 +36,7 @@ void Variable::set_type(Type type)
     if (type == Variable::BINARY)
         glp_set_col_kind(lp_, colNumber_, GLP_BV);
     else if (type == INTEGER)
-        glp_set_col_kind(lp_, colNumber_, GLP_BV);
+        glp_set_col_kind(lp_, colNumber_, GLP_IV);
     else if (type == CONTINUOUS)
-        glp_set_col_kind(lp_, colNumber_, GLP_BV);
+        glp_set_col_kind(lp_, colNumber_, GLP_CV);
 }

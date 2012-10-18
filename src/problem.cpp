@@ -3,7 +3,8 @@
 #include <iostream>
 
 
-Problem::Problem(const std::string& name)
+Problem::Problem(const std::string& name, bool isMIP)
+    : isMIP_(isMIP)
 {
     pb_ = glp_create_prob();
     glp_set_prob_name(pb_, name.c_str());
@@ -46,28 +47,24 @@ Problem::setConstraintsValues(const Constraint& c, int col, double value)
 std::vector<int>
 Problem::solve()
 {
-    std::cout << "Rows : " << glp_get_num_rows(pb_) << std::endl;
-    std::cout << "Cols : " << glp_get_num_cols(pb_) << std::endl;
-
     std::vector<int> res;
     unsigned size = glp_get_num_cols(pb_) * glp_get_num_rows(pb_);
 
     glp_load_matrix(pb_, size, rows_.data(), cols_.data(), values_.data());
     glp_simplex(pb_, nullptr);
 
-    // glp_iocp* param = new glp_iocp;
-    // param->gmi_cuts = GLP_ON;
-    // param->mir_cuts = GLP_ON;
-    // glp_init_iocp(param);
-    // glp_intopt(pb_, param);
-
-    std::cout << "z = " << glp_get_obj_val(pb_) << std::endl;
+    if (isMIP_)
+        glp_intopt(pb_, nullptr);
 
     for (int i = 1; i <= glp_get_num_cols(pb_); ++i) {
-        std::cout << glp_get_col_name(pb_, i) << " : " << glp_get_col_prim(pb_, i) << std::endl;
-
-        if (glp_get_col_prim(pb_, i) == 1)
-            res.push_back(i);
+        if (isMIP_) {
+            if (glp_mip_col_val(pb_, i) == 1)
+                res.push_back(i);
+        }
+        else {
+            if (glp_get_col_prim(pb_, i) == 1.F)
+                res.push_back(i);
+        }
     }
 
     return res;

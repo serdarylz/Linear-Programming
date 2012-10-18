@@ -17,7 +17,7 @@ std::vector<unsigned> capacities;
 std::vector<std::pair<int, int>> coordinates;
 boost::multi_array<short unsigned, 2> distances;
 
-void readFile(char* fileName)
+void readFile(char* fileName, float distance)
 {
     std::ifstream file(fileName);
 
@@ -45,14 +45,12 @@ void readFile(char* fileName)
         distances.resize(boost::extents[nbSites][nbSites]);
         for (unsigned i = 0; i < nbSites; ++i) {
             for (unsigned j = 0; j < nbSites; ++j) {
-                // if (i != j) {
-                    int dist = std::abs(coordinates.at(i).first - coordinates.at(j).first) +
-                        std::abs(coordinates.at(i).second - coordinates.at(j).second);
-                    distances[i][j] = (dist <= 50) ? 1 : 0;
-                    // std::cout << distances[i][j] << " ";
-                // }
+                if (i < j) {
+                    float dist = std::sqrt((coordinates.at(i).first - coordinates.at(j).first) * (coordinates.at(i).first - coordinates.at(j).first) +
+                        (coordinates.at(i).second - coordinates.at(j).second) * (coordinates.at(i).second - coordinates.at(j).second));
+                    distances[i][j] = (dist <= distance) ? 1 : 0;
+                }
             }
-            // std::cout << std::endl;
         }
 
         file.close();
@@ -75,9 +73,9 @@ int main(int argc, char** argv)
     if (argc != 2)
         return 1;
 
-    readFile(argv[1]);
+    readFile(argv[1], 50.F);
 
-    Problem pb("pb");
+    Problem pb("pb", true);
     pb.setOptimization(Problem::MAXIMIZE);
 
     // Main constraint
@@ -96,7 +94,6 @@ int main(int argc, char** argv)
 
         v.set_name(name);
         v.set_type(Variable::BINARY);
-        // v.set_bounds(GLP_DB, 0, 1);
         v.set_coef(capacities.at(i - 1));
 
         pb.setConstraintsValues(p, v, 1);
